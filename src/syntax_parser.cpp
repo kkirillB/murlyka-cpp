@@ -114,6 +114,7 @@ void Syntax_parser::State_H_proc(){
       break;
     case Class_L:
       parser_state = State_A;
+	  break;
     default:
       diagnostic();
       break;
@@ -157,7 +158,7 @@ Syntax_parser::Lexem_clases Syntax_parser::lexem_class(const LScan_lexem_code ls
 
 void Syntax_parser::diagnostic(){
   (this->*diagnostic_procs[parser_state])();
-	//et_->ec->increment_number_of_errors();
+	et_->ec->increment_number_of_errors();
 	return;
 }
 
