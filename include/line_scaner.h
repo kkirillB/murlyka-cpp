@@ -44,19 +44,19 @@ public:
     
 private:
     enum Category : unsigned short {
-    Spaces,                 Other,                         Symbols_for_id_and_keyword,  
-		String_literal_quotes,  String_literal_other_symbols,  Delimiters 
+    Spaces,                 Other,      Symbols_for_id_and_keyword,  
+	String_literal_quotes,  Delimiters 
     };
 
     enum Automaton_name : unsigned short {
     A_start,          A_unknown,   A_keyword_or_id,
-		A_string_literal, A_delimiters  
+	A_string_literal, A_delimiters  
     };
     
     enum String_literal_states : unsigned short {
     	Quotes_state_begin,	None_quotes_state,
     	Quotes_state_end
-		};
+	};
     
     Automaton_name automaton; /* текущий автомат */
     int            state; /* текущее состояние
@@ -77,13 +77,13 @@ private:
     static Final_proc     finals[];
     /* функции обработки лексем: */
     bool start_proc();		    bool unknown_proc();
-		bool keyword_or_id_proc();  bool string_literal_proc();
-		bool delimiters_proc();	    
+	bool keyword_or_id_proc();  bool string_literal_proc();
+	bool delimiters_proc();	    
     /* функции для выполнения действий в случае неожиданного
      * окончания лексемы */
     void none_final_proc();           void unknown_final_proc();
     void keyword_or_id_final_proc();  void string_literal_final_proc();
-		void delimiters_final_proc();
+	void delimiters_final_proc();
     /* Функция, корректирующая код лексемы, скорее всего, являющейся
      * классом символов, и выводящая нужную диагностику. */
 };

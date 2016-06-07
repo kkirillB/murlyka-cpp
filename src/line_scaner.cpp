@@ -7,12 +7,12 @@
 static const unsigned short categories_table[256]={
    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-  17,   16,   24,   16,   16,   16,   16,    2,   48,   48,   16,   20,   16,   20,   20,   16,
-  20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   16,   16,   16,   16,   16,   16,
-  16,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,
-  20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   16,   16,   16,   16,   20,
-   2,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,
-  20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   20,   16,   16,   16,   16,    2,
+   1,    2,    8,    2,    2,    2,    2,    2,   16,   16,    2,    4,    2,    4,    4,    2,
+   4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    2,    2,    2,    2,    2,    2,
+   2,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+   4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    2,    2,    2,    2,    4,
+   2,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+   4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    4,    2,    2,    2,    2,    2,
    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -38,26 +38,26 @@ static const Keyword_codes keywords = {
 
 Line_scaner::Automaton_proc Line_scaner::procs[] = {
   &Line_scaner::start_proc,         &Line_scaner::unknown_proc, 
-	&Line_scaner::keyword_or_id_proc, &Line_scaner::string_literal_proc,
-	&Line_scaner::delimiters_proc
+  &Line_scaner::keyword_or_id_proc, &Line_scaner::string_literal_proc,
+  &Line_scaner::delimiters_proc
 };
 
 Line_scaner::Final_proc Line_scaner::finals[] = {
-    &Line_scaner::none_final_proc,
-    &Line_scaner::unknown_final_proc,  
-	  &Line_scaner::keyword_or_id_final_proc,
-    &Line_scaner::string_literal_final_proc,
-    &Line_scaner::delimiters_final_proc
+  &Line_scaner::none_final_proc,
+  &Line_scaner::unknown_final_proc,  
+  &Line_scaner::keyword_or_id_final_proc,
+  &Line_scaner::string_literal_final_proc,
+  &Line_scaner::delimiters_final_proc
 };
 
 void Line_scaner::update(){
-	lexem_begin = loc->pcurrent_char;
-	lexem_begin_line = loc->current_line;
+  lexem_begin = loc->pcurrent_char;
+  lexem_begin_line = loc->current_line;
 }
 
 LScan_lexem_info Line_scaner::current_lexem(){
     automaton = A_start; 
-	  token.code = None;
+	token.code = None;
     lexem_begin = loc->pcurrent_char;
     bool t = true;
     while((ch = *(loc->pcurrent_char)++)){
@@ -74,14 +74,14 @@ LScan_lexem_info Line_scaner::current_lexem(){
              * лексемы, нужно уменьшить на единицу указатель
              * pcurrent_char. */
             (loc->pcurrent_char)--;
-						if(Identifier == token.code){
+			if(Identifier == token.code){
                 /* Если текущая лексема является идентификатором,
                  * то этот идентификатор нужно записать в таблицу
                  * идентификаторов. */
               token.id_name_index      = ids->insert(buffer);
             }else if(String_literal == token.code){
-            	token.str_lit_name_index = str_lit->insert(buffer);
-			      }	
+              token.str_lit_name_index = str_lit->insert(buffer);
+			}	
             return token;
         }
     }
@@ -111,11 +111,11 @@ bool Line_scaner::start_proc() {
         automaton = A_delimiters; 
         (loc->pcurrent_char)--;
     }else if(belongs(Symbols_for_id_and_keyword, char_categories)){
-	      automaton = A_keyword_or_id;	 
+	    automaton = A_keyword_or_id;	 
         buffer += ch;
 	}else if(belongs(String_literal_quotes, char_categories)){
         automaton = A_string_literal;	
-				token.code = String_literal;	
+		token.code = String_literal;	
         (loc->pcurrent_char)--;
 	}else{
         printf("Нераспознаваемая лексема в строке %zu.\n", 
@@ -149,45 +149,37 @@ bool Line_scaner::keyword_or_id_proc(){
 bool Line_scaner::string_literal_proc(){
 	bool t = false;
 	if (state == -1) {
-		state = 0;	
+		state = 1;	
 		return true;
 	}
 	switch(state){
 		case Quotes_state_begin :
-			if(belongs(String_literal_other_symbols, char_categories)){
-				state = None_quotes_state;			
+            if(belongs(String_literal_quotes, char_categories)){
+				state = None_quotes_state;	
 				t = true;
-			}else if(belongs(String_literal_quotes, char_categories)){
-				state = Quotes_state_end;	
-				t = true;
+				buffer += ch;
 			}else{
 				printf("В строке %zu ожилаются кавычки или другие символы строкового литерала.\n", 
 						loc->current_line);					
 				en->increment_number_of_errors();
 				return false;
 			}
-			buffer += ch;
 			break;
 		
 		case None_quotes_state :
 			if (belongs(String_literal_quotes, char_categories)){
 				state = Quotes_state_end;
 				t = true;
-			}else if(belongs(String_literal_other_symbols, char_categories)){
+			}else{
 				state = None_quotes_state;
 				t = true;
-			}else{
-				printf("В строке %zu ожилаются кавычки.\n",
-						loc->current_line);					
-				en->increment_number_of_errors();
-				return false;
 			}
 			buffer += ch; 
 			break;
 		
 		case Quotes_state_end :
 			if (belongs(String_literal_quotes, char_categories)){
-				state = Quotes_state_begin;	
+				state = None_quotes_state;	
 				t = true;
 			}else{
 				buffer.pop_back();
@@ -237,7 +229,7 @@ void Line_scaner::string_literal_final_proc(){
 		buffer.pop_back();
 		token.str_lit_name_index = str_lit -> insert(buffer);
 	}else{
-		printf("В строке %zu ожилаются кавычки или другие символы строкового литерала.\n",
+		printf("В строке %zu ожилаются кавычки или другие символы строкового литерала(Its final proc).\n",
 				loc->current_line);					
 		en->increment_number_of_errors();	
 	}

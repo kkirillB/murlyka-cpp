@@ -55,7 +55,7 @@ const std::string PHONY = ".PHONY: all all-before all-after clean clean-custom\n
 std::string get_includes(const ParsedProjectInfo& _ppi){
   std::string result = "";
   if(_ppi.include_dirs.empty()){
-    return result += "\n";
+    return result += "\ngovno";
   }else{
     return result += "-I" + intercalate(" -I", _ppi.include_dirs) + "\n";
   }
