@@ -116,6 +116,7 @@ bool Line_scaner::start_proc() {
 	}else if(belongs(String_literal_quotes, char_categories)){
         automaton = A_string_literal;	
 		token.code = String_literal;	
+		state = 0;
         (loc->pcurrent_char)--;
 	}else{
         printf("Нераспознаваемая лексема в строке %zu.\n", 
@@ -147,23 +148,12 @@ bool Line_scaner::keyword_or_id_proc(){
 }
 
 bool Line_scaner::string_literal_proc(){
-	bool t = false;
-	if (state == -1) {
-		state = 1;	
-		return true;
-	}
+	bool t = true;
 	switch(state){
 		case Quotes_state_begin :
-            if(belongs(String_literal_quotes, char_categories)){
-				state = None_quotes_state;	
-				t = true;
-				buffer += ch;
-			}else{
-				printf("В строке %zu ожилаются кавычки или другие символы строкового литерала.\n", 
-						loc->current_line);					
-				en->increment_number_of_errors();
-				return false;
-			}
+            belongs(String_literal_quotes, char_categories)
+			state = None_quotes_state;	
+			t = true;
 			break;
 		
 		case None_quotes_state :
@@ -173,18 +163,19 @@ bool Line_scaner::string_literal_proc(){
 			}else{
 				state = None_quotes_state;
 				t = true;
+				buffer += ch; 
 			}
-			buffer += ch; 
 			break;
 		
 		case Quotes_state_end :
 			if (belongs(String_literal_quotes, char_categories)){
 				state = None_quotes_state;	
 				t = true;
+				buffer += ch; 
 			}else{
-				buffer.pop_back();
+				t = false;
 			}
-		break;		
+				break;		
 	}
 	return t;
 }
@@ -225,11 +216,10 @@ void Line_scaner::keyword_or_id_final_proc(){
 }
 
 void Line_scaner::string_literal_final_proc(){
-	if(state == 2){
-		buffer.pop_back();
+	if(state == Quotes_state_end){
 		token.str_lit_name_index = str_lit -> insert(buffer);
 	}else{
-		printf("В строке %zu ожилаются кавычки или другие символы строкового литерала(Its final proc).\n",
+		printf("В строке %zu неожиданно закончился строковый литерал.\n",
 				loc->current_line);					
 		en->increment_number_of_errors();	
 	}
