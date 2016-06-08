@@ -151,18 +151,14 @@ bool Line_scaner::string_literal_proc(){
 	bool t = true;
 	switch(state){
 		case Quotes_state_begin :
-            belongs(String_literal_quotes, char_categories)
 			state = None_quotes_state;	
-			t = true;
 			break;
 		
 		case None_quotes_state :
 			if (belongs(String_literal_quotes, char_categories)){
 				state = Quotes_state_end;
-				t = true;
 			}else{
 				state = None_quotes_state;
-				t = true;
 				buffer += ch; 
 			}
 			break;
@@ -170,7 +166,6 @@ bool Line_scaner::string_literal_proc(){
 		case Quotes_state_end :
 			if (belongs(String_literal_quotes, char_categories)){
 				state = None_quotes_state;	
-				t = true;
 				buffer += ch; 
 			}else{
 				t = false;
