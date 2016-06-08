@@ -116,7 +116,7 @@ bool Line_scaner::start_proc() {
 	}else if(belongs(String_literal_quotes, char_categories)){
         automaton = A_string_literal;	
 		token.code = String_literal;	
-		state = 0;
+		state = Quotes_state_begin;
         (loc->pcurrent_char)--;
 	}else{
         printf("Нераспознаваемая лексема в строке %zu.\n", 

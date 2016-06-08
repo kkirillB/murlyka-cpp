@@ -119,7 +119,7 @@ size_t Trie<T>::add_child(size_t parent_idx, T x){
 
 template<typename T>
 size_t Trie<T>::insert(const std::basic_string<T>& s){
-    ssize_t len = s.length();
+    size_t len = s.length();
     size_t current_root = 0;
     for (size_t i = 0; i < len; i++) {
         current_root = add_child(current_root,s[i]);

@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
     if(1 == argc){
       printf("Не задан обрабатываемый файл.");
     }else{
-    	for (size_t i = 1; i < argc; ++i){
+    	for (int i = 1; i < argc; ++i){
     		makefile_handler(argv[i]);
       }
     }

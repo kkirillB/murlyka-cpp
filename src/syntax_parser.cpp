@@ -181,6 +181,8 @@ void Syntax_parser::State_A_diagnostic_proc(){
       project_info.project.main_file =
       std::string(et_->str_lit_trie->get_cstring(lli.str_lit_name_index));
       break;
+	default:
+	  break;	
   }
   return;
 }
@@ -216,6 +218,8 @@ void Syntax_parser::State_B_or_C_or_D_diagnostic_proc(){
         set_project_info();
       parser_state = State_I;
       break;
+	default:
+	  break;  
   }
   return;
 }
@@ -244,6 +248,8 @@ void Syntax_parser::State_E_or_F_or_G_diagnostic_proc(){
         set_project_info();
       parser_state = State_I;
       break;
+	default:
+	  break;  
   }
   return;
 }
@@ -261,12 +267,14 @@ void Syntax_parser::State_H_or_I_diagnostic_proc(){
     case Class_C:
       parser_state = State_D;
       break;
-    case Class_K: Class_M:
+    case Class_K: case Class_M:
       parser_state = State_A;
       break;
     case Class_N:
       parser_state = State_I;
       break;
+	default:
+	  break;  
   }
   return;
 }
@@ -313,7 +321,9 @@ void Syntax_parser::set_project_info(){
 		case Kw_include_dirs:
       project_info.include_dirs =
 			std::string(et_->str_lit_trie->get_cstring(lli.str_lit_name_index));
-			break;							
+			break;	
+		default:
+			break;
 	}
 	return;
 }

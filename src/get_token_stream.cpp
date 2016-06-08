@@ -22,7 +22,7 @@ TokenVector getTokenStream(const std::string& txt, Errors_and_tries_ptr et){
 		loc->current_line  = line_number;
 		loc->pcurrent_char = s;
 		sc->update();
-		while(lex_code = (lex_info = sc->current_lexem()).code){
+		while((lex_code = (lex_info = sc->current_lexem()).code)){
 			tv.push_back({lex_info, line_number});
 		}
 		line_number++;
