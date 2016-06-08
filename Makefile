@@ -1,7 +1,7 @@
 CPP = g++
 CXXFLAGS = -std=c++14 -Wall
 LINKER = g++
-LINKERFLAGS = -lboost_filesystem-mgw53-mt-s-1_60 -lboost_filesystem-mgw53-mt-sd-1_60 -lboost_system-mgw53-mt-s-1_60 -lboost_thread-mgw53-mt-sd-1_60
+LINKERFLAGS = -lboost_filesystem -lboost_system
 vpath %.cpp src
 vpath %.o build
 vpath murlyka-cpp build
