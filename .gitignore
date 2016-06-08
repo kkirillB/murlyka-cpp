@@ -27,8 +27,3 @@
 *.out
 *.app
 
-# Build results
-build/*.o
-build/*.exe
-build/*.out
-build/*.app
